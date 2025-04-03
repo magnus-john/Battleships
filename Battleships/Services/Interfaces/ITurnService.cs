@@ -6,6 +6,8 @@ namespace Battleships.Services.Interfaces
     {
         void UpdateDisplay(MoveResult result);
 
-        MoveResult? ProcessMove(Board board);
+        Move? GetMove();
+
+        MoveResult ProcessMove(Board board, Move move);
     }
 }

@@ -30,8 +30,8 @@ namespace Battleships
         {
             services
                 .AddSingleton<IConfigService, ConfigService>()
-                .AddSingleton<IBoardFactory, BoardFactory>()
                 .AddSingleton<IBoardSetupFactory, BoardSetupFactory>()
+                .AddSingleton<IBoardTemplateFactory, BoardTemplateFactory>()
                 .AddSingleton<IFleetFactory, FleetFactory>();
 
             services

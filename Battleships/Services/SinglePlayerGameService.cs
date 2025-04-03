@@ -18,10 +18,12 @@ namespace Battleships.Services
                 if (result.GameIsOver)
                     break;
 
-                result = turnService.ProcessMove(result.Board);
+                var move = turnService.GetMove();
 
-                if (result == null)
+                if (move == null)
                     break;
+
+                result = turnService.ProcessMove(result.Board, move);
             }
         }
     }

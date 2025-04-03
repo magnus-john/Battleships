@@ -53,7 +53,7 @@ namespace Battleships.UI
             if (outcome.Result != Result.None)
                 Console.WriteLine(outcome.Result.GetEnumDescription());
 
-            if (outcome.Sunk != null)
+            if (outcome.Result == Result.Sink)
                 Console.WriteLine($"You sunk a {outcome.Sunk}!");
         }
 

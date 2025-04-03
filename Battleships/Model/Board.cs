@@ -1,38 +1,58 @@
-﻿namespace Battleships.Model
+﻿using Battleships.Extensions;
+using Battleships.Model.Enums;
+using Battleships.Services.Exceptions;
+
+namespace Battleships.Model
 {
     public class Board
     {
+        private readonly BoardTemplate _template;
         private readonly HashSet<Point> _misses = [];
         private readonly List<Ship> _fleet = [];
 
-        public int Height { get; }
-        public int Width { get; }
+        public int Height => _template.Height;
+        public int Width => _template.Width;
 
-        public Board(int height, int width)
+        public Board(BoardTemplate template, IEnumerable<Ship> fleet)
         {
-            if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
-            if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+            _template = template;
 
-            Height = height;
-            Width = width;
+            if (fleet.Any(ship => !Add(ship)))
+                throw new CannotPlaceShipException();
+
+            if (_fleet.Count == 0)
+                throw new ArgumentOutOfRangeException(nameof(fleet));
         }
 
-        public bool AllShipsAreSunk => _fleet.Count != 0
-                                       && _fleet.All(x => x.IsSunk);
-
-        public bool IsOutOfBounds(Point p) =>
-            p.X < 0
-            || p.X >= Width
-            || p.Y < 0
-            || p.Y >= Height;
-
-        public IEnumerable<Point> FreeSpaces => AllLocations.Except(ShipLocations);
+        public bool AllShipsAreSunk => _fleet.All(x => x.IsSunk);
+        
+        public IEnumerable<Point> FreeSpaces => _template.Locations.Except(ShipLocations);
         public IEnumerable<Point> Hits => _fleet.SelectMany(x => x.Hits);
         public IEnumerable<Point> Misses => _misses;
-        public IEnumerable<Point> ShipLocations => _fleet.SelectMany(x => x.CoOrdinates);
+        public IEnumerable<Point> ShipLocations => _fleet.Locations();
         public IEnumerable<Point> UndiscoveredShipLocations => ShipLocations.Except(Hits);
 
-        public bool Add(Ship ship)
+        public MoveOutcome Attack(Point target)
+        {
+            if (IsOutOfBounds(target))
+                return new MoveOutcome(Result.OutOfBounds);
+
+            var ship = ShipAt(target);
+
+            if (ship == null)
+            {
+                _misses.Add(target);
+                return new MoveOutcome(Result.Miss);
+            }
+
+            var outcome = ship.RecordHit(target);
+
+            return outcome == HitType.Fatal
+                ? new MoveOutcome(Result.Sink, ship.Name)
+                : new MoveOutcome(Result.Hit);
+        }
+
+        private bool Add(Ship ship)
         {
             if (ship.CoOrdinates.Any(IsOutOfBounds))
                 return false;
@@ -47,22 +67,12 @@
             return true;
         }
 
-        public bool RecordMiss(Point p)
-        {
-            if (IsOutOfBounds(p) 
-                || ShipLocations.Contains(p))
-                return false;
+        private bool IsOutOfBounds(Point p) =>
+            p.X < 0
+            || p.X >= _template.Width
+            || p.Y < 0
+            || p.Y >= _template.Height;
 
-            _misses.Add(p);
-
-            return true;
-        }
-
-        public Ship? ShipAt(Point p) => _fleet.FirstOrDefault(x => x.CoOrdinates.Contains(p));
-
-        private IEnumerable<Point> AllLocations =>
-            from x in Enumerable.Range(0, Width)
-            from y in Enumerable.Range(0, Height)
-            select new Point(x, y);
+        private Ship? ShipAt(Point p) => _fleet.FirstOrDefault(x => x.CoOrdinates.Contains(p));
     }
 }

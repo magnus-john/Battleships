@@ -12,6 +12,9 @@ namespace Battleships.Model.Enums
 
         Miss,
 
+        [Description("Hit")]
+        Sink,
+
         [Description("Out of bounds")]
         OutOfBounds
     }

@@ -10,7 +10,7 @@ namespace Battleships.Tests.Helpers
 
     public class TooLong : ShipLayout
     {
-        public override int Length => Boards.DefaultWidth + 1;
+        public override int Length => BoardTemplate.Medium + 1;
     }
 
     public static class Ships

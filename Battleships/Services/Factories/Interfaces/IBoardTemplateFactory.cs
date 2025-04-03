@@ -2,8 +2,8 @@
 
 namespace Battleships.Services.Factories.Interfaces
 {
-    public interface IBoardFactory
+    public interface IBoardTemplateFactory
     {
-        Board GetBoard();
+        BoardTemplate GetBoardTemplate();
     }
 }

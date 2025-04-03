@@ -8,7 +8,7 @@ namespace Battleships.Services.Factories
 {
     public class BoardSetupFactory(
         IConfigService config, 
-        IBoardFactory boardFactory, 
+        IBoardTemplateFactory boardFactory, 
         IFleetFactory fleetFactory) : IBoardSetupFactory
     {
         public IBoardSetupService GetSetupService() => config.SetupType switch

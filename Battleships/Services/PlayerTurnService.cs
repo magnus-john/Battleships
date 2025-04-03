@@ -15,13 +15,8 @@ namespace Battleships.Services
                 ui.DisplayWinMessage();
         }
 
-        public MoveResult? ProcessMove(Board board)
-        {
-            var move = ui.GetUserInput();
+        public Move? GetMove() => ui.GetUserInput();
 
-            return move == null
-                ? null
-                : moveService.Process(move, board);
-        }
+        public MoveResult ProcessMove(Board board, Move move) => moveService.MakeMove(board, move);
     }
 }

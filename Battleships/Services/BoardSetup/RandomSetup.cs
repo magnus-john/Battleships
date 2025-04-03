@@ -1,4 +1,5 @@
-﻿using Battleships.Model;
+﻿using Battleships.Extensions;
+using Battleships.Model;
 using Battleships.Model.Enums;
 using Battleships.Services.BoardSetup.Interfaces;
 using Battleships.Services.Exceptions;
@@ -6,37 +7,44 @@ using Battleships.Services.Factories.Interfaces;
 
 namespace Battleships.Services.BoardSetup
 {
-    public class RandomSetup(IBoardFactory boardFactory, IFleetFactory fleetFactory) : IBoardSetupService
+    public class RandomSetup(IBoardTemplateFactory boardFactory, IFleetFactory fleetFactory) : IBoardSetupService
     {
+        private readonly List<Ship> _ships = [];
+
         public Board SetupBoard()
         {
             var fleet = fleetFactory.GetFleet();
-            var board = boardFactory.GetBoard();
+            var template = boardFactory.GetBoardTemplate();
 
-            if (fleet.Any(layout => !CanPlaceShip(board, layout)))
+            if (fleet.Any(layout => !CanPlaceShip(template, layout)))
                 throw new CannotPlaceShipException();
 
-            return board;
+            return new Board(template, _ships);
         }
 
-        private static bool CanPlaceShip(Board board, ShipLayout layout)
+        private bool CanPlaceShip(BoardTemplate template, ShipLayout layout)
         {
-            foreach (var point in board.FreeSpaces.OrderBy(_ => Guid.NewGuid()))
-            foreach (var orientation in GetRandomOrientations())
+            var freeSpaces = template.Locations.Except(_ships.Locations());
+
+            foreach (var point in freeSpaces.OrderBy(_ => Guid.NewGuid()))
+            foreach (var orientation in RandomOrientations)
             {
-                if (board.Add(new Ship(layout, point, orientation)))
-                    return true;
+                var ship = new Ship(layout, point, orientation);
+
+                if (!template.Fits(ship)
+                    || ship.CoOrdinates.Any(_ships.Locations().Contains)) 
+                    continue;
+
+                _ships.Add(ship);
+                return true;
             }
 
             return false;
         }
 
-        private static IEnumerable<Orientation> GetRandomOrientations()
-        {
-            return Enum
-                .GetValues(typeof(Orientation))
-                .Cast<Orientation>()
-                .OrderBy(_ => Guid.NewGuid());
-        } 
+        private static IEnumerable<Orientation> RandomOrientations => Enum
+            .GetValues(typeof(Orientation))
+            .Cast<Orientation>()
+            .OrderBy(_ => Guid.NewGuid());
     }
 }
