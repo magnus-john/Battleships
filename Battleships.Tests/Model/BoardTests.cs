@@ -1,5 +1,7 @@
 ﻿using Battleships.Extensions;
 using Battleships.Model;
+using Battleships.Model.Enums;
+using Battleships.Services.Exceptions;
 using Battleships.Tests.Helpers;
 using FluentAssertions;
 using Xunit;
@@ -14,6 +16,18 @@ namespace Battleships.Tests.Model
         public void Initialise_ShipsEmpty_ThrowsException()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => _sut = new Board(new MediumBoard(), []));
+        }
+
+        [Fact]
+        public void Initialise_ShipsOverlap_ThrowsException()
+        {
+            Assert.Throws<CannotPlaceShipException>(() => _sut = new Board(new MediumBoard(), [Ships.TopLeftTug, Ships.TopLeftTug]));
+        }
+
+        [Fact]
+        public void Initialise_ShipsOutOfBounds_ThrowsException()
+        {
+            Assert.Throws<CannotPlaceShipException>(() => _sut = new Board(new MediumBoard(), [Ships.OutOfBoundsTug]));
         }
 
         [Fact]
@@ -214,6 +228,40 @@ namespace Battleships.Tests.Model
             _sut = Boards.Medium([ship]);
 
             _sut.UndiscoveredShipLocations.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Attack_TargetIsOutOfBounds_ReturnsOutOfBounds()
+        {
+            var result = _sut.Attack(Points.OutOfBounds);
+
+            result.Should().BeEquivalentTo(new MoveOutcome(Result.OutOfBounds));
+        }
+
+        [Fact]
+        public void Attack_TargetMisses_ReturnsMiss()
+        {
+            var result = _sut.Attack(_sut.FreeSpaces.First());
+
+            result.Should().BeEquivalentTo(new MoveOutcome(Result.Miss));
+        }
+
+        [Fact]
+        public void Attack_TargetHits_AndDoesNotSinkShip_ReturnsHit()
+        {
+            _sut = Boards.MediumWithTopLeftDestroyer;
+            var result = _sut.Attack(_sut.ShipLocations.First());
+
+            result.Should().BeEquivalentTo(new MoveOutcome(Result.Hit));
+        }
+
+        [Fact]
+        public void Attack_TargetHits_AndSinksShip_ReturnsSink()
+        {
+            _sut = Boards.MediumWithTopLeftTug;
+            var result = _sut.Attack(_sut.ShipLocations.First());
+
+            result.Should().BeEquivalentTo(new MoveOutcome(Result.Sink, nameof(Tug)));
         }
 
         private static List<Ship> TwoShips => 

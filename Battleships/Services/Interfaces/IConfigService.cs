@@ -7,11 +7,6 @@ namespace Battleships.Services.Interfaces
         BoardSize BoardSize { get; }
         FleetType FleetType { get; }
         SetupType SetupType { get; }
-
-        int Small { get; }
-        int Medium { get; }
-        int Large { get; }
-
         bool AllowCheating { get; }
     }
 }
