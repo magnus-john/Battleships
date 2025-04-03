@@ -1,21 +1,30 @@
 ﻿namespace Battleships.Model
 {
-    public class Board(int height, int width)
+    public class Board
     {
         private readonly HashSet<Point> _misses = [];
         private readonly List<Ship> _fleet = [];
 
-        public int Height => height;
-        public int Width => width;
+        public int Height { get; }
+        public int Width { get; }
+
+        public Board(int height, int width)
+        {
+            if (height <= 0) throw new ArgumentOutOfRangeException(nameof(height));
+            if (width <= 0) throw new ArgumentOutOfRangeException(nameof(width));
+
+            Height = height;
+            Width = width;
+        }
 
         public bool AllShipsAreSunk => _fleet.Count != 0
                                        && _fleet.All(x => x.IsSunk);
 
         public bool IsOutOfBounds(Point p) =>
             p.X < 0
-            || p.X >= width
+            || p.X >= Width
             || p.Y < 0
-            || p.Y >= height;
+            || p.Y >= Height;
 
         public IEnumerable<Point> FreeSpaces => AllLocations.Except(ShipLocations);
         public IEnumerable<Point> Hits => _fleet.SelectMany(x => x.Hits);

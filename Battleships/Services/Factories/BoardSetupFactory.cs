@@ -11,16 +11,11 @@ namespace Battleships.Services.Factories
         IBoardFactory boardFactory, 
         IFleetFactory fleetFactory) : IBoardSetupFactory
     {
-        public IBoardSetupService GetSetupService()
+        public IBoardSetupService GetSetupService() => config.SetupType switch
         {
-            var type = config.SetupType;
-
-            return type switch
-            {
-                SetupType.Random => new RandomSetup(boardFactory, fleetFactory),
-                SetupType.TopLeft => new TopLeftSetup(boardFactory, fleetFactory),
-                _ => throw new ArgumentOutOfRangeException(nameof(type))
-            };
-        }
+            SetupType.Random => new RandomSetup(boardFactory, fleetFactory),
+            SetupType.TopLeft => new TopLeftSetup(boardFactory, fleetFactory),
+            _ => throw new ArgumentOutOfRangeException(nameof(config.SetupType))
+        };
     }
 }
