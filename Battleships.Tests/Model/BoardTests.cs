@@ -1,7 +1,7 @@
-﻿using Battleships.Extensions;
-using Battleships.Model;
+﻿using Battleships.Model;
 using Battleships.Model.Enums;
 using Battleships.Services.Exceptions;
+using Battleships.Tests.Extensions;
 using Battleships.Tests.Helpers;
 using FluentAssertions;
 using Xunit;
@@ -86,26 +86,6 @@ namespace Battleships.Tests.Model
         }
 
         [Fact]
-        public void FreeSpaces_ReturnsExpectedResult()
-        {
-            var template = new MediumBoard();
-            var ships = new List<Ship>
-            {
-                Ships.TopLeftDestroyer,
-                Ships.SecondRowTug
-            };
-
-            _sut = new Board(template, ships);
-            
-            var result = _sut.FreeSpaces.ToList();
-
-            var expected = template.Locations.Count() - ships.Locations().Count();
-            result.Count.Should().Be(expected);
-
-            ships.ForEach(x => result.Should().NotContain(x.CoOrdinates));
-        }
-
-        [Fact]
         public void Hits_ShipsPresent_WithNoHits_IsEmpty()
         {
             _sut.Hits.Should().BeEmpty();
@@ -135,8 +115,8 @@ namespace Battleships.Tests.Model
         [Fact]
         public void Misses_MovesMade_ThatMiss_ReturnsExpectedResult()
         {
-            var expected = _sut.FreeSpaces.First();
-            _sut.Attack(expected);
+            var expected = _sut.FreeSpaces().First();
+            _sut.FireUpon(expected);
 
             _sut.Misses.Should().BeEquivalentTo([expected]);
         }
@@ -144,9 +124,9 @@ namespace Battleships.Tests.Model
         [Fact]
         public void Misses_MovesMade_ThatRepeatedlyMiss_ReturnsExpectedResult()
         {
-            var expected = _sut.FreeSpaces.First();
-            _sut.Attack(expected);
-            _sut.Attack(expected);
+            var expected = _sut.FreeSpaces().First();
+            _sut.FireUpon(expected);
+            _sut.FireUpon(expected);
 
             _sut.Misses.Should().BeEquivalentTo([expected]);
         }
@@ -154,7 +134,7 @@ namespace Battleships.Tests.Model
         [Fact]
         public void Misses_MovesMade_ThatAllHit_IsEmpty()
         {
-            _sut.Attack(_sut.ShipLocations.First());
+            _sut.FireUpon(_sut.ShipLocations.First());
 
             _sut.Misses.Should().BeEmpty();
         }
@@ -163,9 +143,9 @@ namespace Battleships.Tests.Model
         public void Misses_MovesMade_MixOfHitsAndMisses_ReturnsExpectedResult()
         {
             _sut = Boards.MediumWithTopLeftDestroyer;
-            _sut.Attack(_sut.ShipLocations.First());
-            var expected = _sut.FreeSpaces.First();
-            _sut.Attack(expected);
+            _sut.FireUpon(_sut.ShipLocations.First());
+            var expected = _sut.FreeSpaces().First();
+            _sut.FireUpon(expected);
 
             _sut.Misses.Should().BeEquivalentTo([expected]);
         }
@@ -233,35 +213,35 @@ namespace Battleships.Tests.Model
         [Fact]
         public void Attack_TargetIsOutOfBounds_ReturnsOutOfBounds()
         {
-            var result = _sut.Attack(Points.OutOfBounds);
+            var result = _sut.FireUpon(Points.OutOfBounds);
 
-            result.Should().BeEquivalentTo(new MoveOutcome(Result.OutOfBounds));
+            result.Should().BeEquivalentTo(new MoveResult(MoveOutcome.OutOfBounds));
         }
 
         [Fact]
         public void Attack_TargetMisses_ReturnsMiss()
         {
-            var result = _sut.Attack(_sut.FreeSpaces.First());
+            var result = _sut.FireUpon(_sut.FreeSpaces().First());
 
-            result.Should().BeEquivalentTo(new MoveOutcome(Result.Miss));
+            result.Should().BeEquivalentTo(new MoveResult(MoveOutcome.Miss));
         }
 
         [Fact]
         public void Attack_TargetHits_AndDoesNotSinkShip_ReturnsHit()
         {
             _sut = Boards.MediumWithTopLeftDestroyer;
-            var result = _sut.Attack(_sut.ShipLocations.First());
+            var result = _sut.FireUpon(_sut.ShipLocations.First());
 
-            result.Should().BeEquivalentTo(new MoveOutcome(Result.Hit));
+            result.Should().BeEquivalentTo(new MoveResult(MoveOutcome.Hit));
         }
 
         [Fact]
         public void Attack_TargetHits_AndSinksShip_ReturnsSink()
         {
             _sut = Boards.MediumWithTopLeftTug;
-            var result = _sut.Attack(_sut.ShipLocations.First());
+            var result = _sut.FireUpon(_sut.ShipLocations.First());
 
-            result.Should().BeEquivalentTo(new MoveOutcome(Result.Sink, nameof(Tug)));
+            result.Should().BeEquivalentTo(new MoveResult(MoveOutcome.Sink, nameof(Tug)));
         }
 
         private static List<Ship> TwoShips => 

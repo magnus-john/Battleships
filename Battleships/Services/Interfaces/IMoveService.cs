@@ -4,6 +4,6 @@ namespace Battleships.Services.Interfaces
 {
     public interface IMoveService
     {
-        MoveResult MakeMove(Board board, Move move);
+        Response MakeMove(Board board, Move move);
     }
 }

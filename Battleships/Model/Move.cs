@@ -4,9 +4,12 @@ namespace Battleships.Model
 {
     public class Move(string? input)
     {
+        public const string Exit = "EXIT";
         private const string ValidInput = "^[A-Z][0-9]+$";
 
         public Point? Location { get; } = Parse(input);
+
+        public bool IsExit { get; } = input?.ToUpper() == Exit;
 
         private static Point? Parse(string? input)
         {

@@ -1,9 +1,10 @@
-﻿using Battleships.Services.BoardSetup.Interfaces;
+﻿using Battleships.Model.Enums;
+using Battleships.Services.BoardSetup.Interfaces;
 
 namespace Battleships.Services.Factories.Interfaces
 {
     public interface IBoardSetupFactory
     {
-        IBoardSetupService GetSetupService();
+        IBoardSetupService GetSetupService(SetupType setupType);
     }
 }

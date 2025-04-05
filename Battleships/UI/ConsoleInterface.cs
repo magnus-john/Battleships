@@ -7,36 +7,27 @@ using Battleships.UI.Interfaces;
 
 namespace Battleships.UI
 {
-    public class ConsoleInterface(IConfigService config, IBoardDisplayService displayService) : IGameInterface
+    public class ConsoleInterface(IBoardDisplayService displayService) : IGameInterface
     {
         private const string Empty = " . ";
         private const string Hit = " X ";
         private const string Miss = " O ";
         private const string Undiscovered = " @ ";
 
-        public void Display(Board board)
+        public void Display(Board board, bool allowCheating = false)
         {
             Console.Clear();
 
             var data = displayService.GetData(board);
 
-            for (var y = 0; y < board.Height; y++)
+            for (var y = 0; y < data.GetLength(1); y++)
             {
                 var line = new StringBuilder();
 
                 line.Append((char)(y + Constants.CapitalA));
 
-                for (var x = 0; x < board.Width; x++)
-                {
-                    line.Append(data[x, y] switch
-                    {
-                        BoardElement.Empty => Empty,
-                        BoardElement.Hit => Hit,
-                        BoardElement.Miss => Miss,
-                        BoardElement.Undiscovered => config.AllowCheating ? Undiscovered : Empty,
-                        _ => throw new ArgumentOutOfRangeException()
-                    });
-                }
+                for (var x = 0; x < data.GetLength(0); x++)
+                    line.Append(Output(data[x, y], allowCheating));
 
                 Console.WriteLine(line);
             }
@@ -46,29 +37,36 @@ namespace Battleships.UI
             Console.WriteLine($"  {bottomRow}");
         }
 
-        public void Display(MoveOutcome outcome)
+        public void Display(MoveResult outcome)
         {
             Console.WriteLine();
 
-            if (outcome.Result != Result.None)
-                Console.WriteLine(outcome.Result.GetEnumDescription());
+            if (outcome.Outcome != MoveOutcome.None)
+                Console.WriteLine(outcome.Outcome.GetEnumDescription());
 
-            if (outcome.Result == Result.Sink)
+            if (outcome.Outcome == MoveOutcome.Sink)
                 Console.WriteLine($"You sunk a {outcome.Sunk}!");
         }
 
         public void DisplayWinMessage() => Console.WriteLine("You win!");
 
-        public Move? GetUserInput()
+        public Move GetUserInput()
         {
             Console.WriteLine();
             Console.WriteLine("Your move:");
 
             var input = Console.ReadLine();
 
-            return input is "exit" 
-                ? null 
-                : new Move(input);
+            return new Move(input);
         }
+
+        private static string Output(BoardElement element, bool allowCheating) => element switch
+        {
+            BoardElement.Empty => Empty,
+            BoardElement.Hit => Hit,
+            BoardElement.Miss => Miss,
+            BoardElement.Undiscovered => allowCheating ? Undiscovered : Empty,
+            _ => throw new ArgumentOutOfRangeException(nameof(element))
+        };
     }
 }

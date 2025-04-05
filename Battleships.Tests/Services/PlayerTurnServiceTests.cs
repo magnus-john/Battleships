@@ -25,50 +25,6 @@ namespace Battleships.Tests.Services
         }
 
         [Fact]
-        public void UpdateDisplay_CallsUiDisplayMethods()
-        {
-            var board = Boards.MediumWithTopLeftTug;
-            var moveOutcome = new MoveOutcome(Result.Miss);
-
-            _interface
-                .Setup(x => x.Display(board))
-                .Verifiable();
-
-            _interface
-                .Setup(x => x.Display(moveOutcome))
-                .Verifiable();
-
-            _sut.UpdateDisplay(new MoveResult(board, moveOutcome));
-
-            VerifyAsserts();
-        }
-
-        [Fact]
-        public void UpdateDisplay_WhenGameIsOver_DisplaysWinMessage()
-        {
-            var moveOutcome = new MoveOutcome(Result.Miss);
-            var ship = Ships.TopLeftDestroyer;
-            Ships.Sink(ship);
-            var board = Boards.Medium([ship]);
-
-            _interface
-                .Setup(x => x.Display(board))
-                .Verifiable();
-
-            _interface
-                .Setup(x => x.Display(moveOutcome))
-                .Verifiable();
-
-            _interface
-                .Setup(x => x.DisplayWinMessage())
-                .Verifiable();
-
-            _sut.UpdateDisplay(new MoveResult(board, moveOutcome));
-
-            VerifyAsserts();
-        }
-
-        [Fact]
         public void GetMove_GetsMoveFromInterface()
         {
             var expected = Moves.A1;
@@ -89,7 +45,7 @@ namespace Battleships.Tests.Services
         {
             var board = Boards.TinyWithTopLeftTug;
             var move = Moves.A1;
-            var expected = new MoveResult(Boards.MediumWithTopLeftTug, Result.Hit);
+            var expected = new Response(Boards.MediumWithTopLeftTug, MoveOutcome.Hit);
 
             _moveService
                 .Setup(x => x.MakeMove(board, move))

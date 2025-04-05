@@ -23,6 +23,9 @@ namespace Battleships.Model
                     start.Y + (orientation == Orientation.Vertical ? i : 0)
                 ));
             }
+
+            if (_coOrdinates.Count == 0)
+                throw new ArgumentOutOfRangeException(nameof(layout));
         }
 
         public HitType RecordHit(Point p)
@@ -38,7 +41,6 @@ namespace Battleships.Model
                 : HitType.NonFatal; 
         }
 
-        public bool IsSunk => _coOrdinates.Count != 0
-                              && _coOrdinates.All(_hits.Contains);
+        public bool IsSunk => _coOrdinates.All(_hits.Contains);
     }
 }

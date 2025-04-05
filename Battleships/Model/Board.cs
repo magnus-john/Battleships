@@ -17,7 +17,7 @@ namespace Battleships.Model
         {
             _template = template;
 
-            if (fleet.Any(ship => !Add(ship)))
+            if (fleet.Any(ship => !CanBeAdded(ship)))
                 throw new CannotPlaceShipException();
 
             if (_fleet.Count == 0)
@@ -25,36 +25,35 @@ namespace Battleships.Model
         }
 
         public bool AllShipsAreSunk => _fleet.All(x => x.IsSunk);
-        
-        public IEnumerable<Point> FreeSpaces => _template.Locations.Except(ShipLocations);
+
         public IEnumerable<Point> Hits => _fleet.SelectMany(x => x.Hits);
         public IEnumerable<Point> Misses => _misses;
         public IEnumerable<Point> ShipLocations => _fleet.Locations();
         public IEnumerable<Point> UndiscoveredShipLocations => ShipLocations.Except(Hits);
 
-        public MoveOutcome Attack(Point target)
+        public MoveResult FireUpon(Point target)
         {
-            if (IsOutOfBounds(target))
-                return new MoveOutcome(Result.OutOfBounds);
+            if (_template.IsOutOfBounds(target))
+                return new MoveResult(MoveOutcome.OutOfBounds);
 
             var ship = ShipAt(target);
 
             if (ship == null)
             {
                 _misses.Add(target);
-                return new MoveOutcome(Result.Miss);
+                return new MoveResult(MoveOutcome.Miss);
             }
 
             var outcome = ship.RecordHit(target);
 
             return outcome == HitType.Fatal
-                ? new MoveOutcome(Result.Sink, ship.Name)
-                : new MoveOutcome(Result.Hit);
+                ? new MoveResult(MoveOutcome.Sink, ship.Name)
+                : new MoveResult(MoveOutcome.Hit);
         }
 
-        private bool Add(Ship ship)
+        private bool CanBeAdded(Ship ship)
         {
-            if (ship.CoOrdinates.Any(IsOutOfBounds))
+            if (ship.CoOrdinates.Any(_template.IsOutOfBounds))
                 return false;
 
             var existingShipLocations = ShipLocations.ToHashSet();
@@ -66,12 +65,6 @@ namespace Battleships.Model
 
             return true;
         }
-
-        private bool IsOutOfBounds(Point p) =>
-            p.X < 0
-            || p.X >= _template.Width
-            || p.Y < 0
-            || p.Y >= _template.Height;
 
         private Ship? ShipAt(Point p) => _fleet.FirstOrDefault(x => x.CoOrdinates.Contains(p));
     }

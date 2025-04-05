@@ -2,7 +2,7 @@
 
 namespace Battleships.Model.Enums
 {
-    public enum Result
+    public enum MoveOutcome
     {
         None,
         Hit,

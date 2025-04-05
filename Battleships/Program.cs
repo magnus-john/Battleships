@@ -15,7 +15,7 @@ namespace Battleships
             var services = new ServiceCollection();
 
             ConfigureServices(services);
-            
+
             var game = services
                 .BuildServiceProvider()
                 .GetService<IGameService>();
@@ -29,6 +29,7 @@ namespace Battleships
         private static void ConfigureServices(IServiceCollection services)
         {
             services
+                .AddSingleton<IConfigManager, AppSettingsConfigManager>()
                 .AddSingleton<IConfigService, ConfigService>()
                 .AddSingleton<IBoardSetupFactory, BoardSetupFactory>()
                 .AddSingleton<IBoardTemplateFactory, BoardTemplateFactory>()

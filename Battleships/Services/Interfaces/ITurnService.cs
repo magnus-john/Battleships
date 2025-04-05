@@ -4,10 +4,8 @@ namespace Battleships.Services.Interfaces
 {
     public interface ITurnService
     {
-        void UpdateDisplay(MoveResult result);
+        Move GetMove();
 
-        Move? GetMove();
-
-        MoveResult ProcessMove(Board board, Move move);
+        Response ProcessMove(Board board, Move move);
     }
 }

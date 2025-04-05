@@ -6,14 +6,14 @@ namespace Battleships.Services
 {
     public class MoveService : IMoveService
     {
-        public MoveResult MakeMove(Board board, Move move)
+        public Response MakeMove(Board board, Move move)
         {
             if (move.Location == null)
-                return new MoveResult(board, Result.Invalid);
+                return new Response(board, MoveOutcome.Invalid);
 
-            var outcome = board.Attack(move.Location.Value);
+            var result = board.FireUpon(move.Location.Value);
 
-            return new MoveResult(board, outcome);
+            return new Response(board, result);
         }
     }
 }

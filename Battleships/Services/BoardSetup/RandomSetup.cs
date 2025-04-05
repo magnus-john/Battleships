@@ -7,14 +7,16 @@ using Battleships.Services.Factories.Interfaces;
 
 namespace Battleships.Services.BoardSetup
 {
-    public class RandomSetup(IBoardTemplateFactory boardFactory, IFleetFactory fleetFactory) : IBoardSetupService
+    public class RandomSetup(
+        IBoardTemplateFactory templateFactory, 
+        IFleetFactory fleetFactory) : IBoardSetupService
     {
         private readonly List<Ship> _ships = [];
 
-        public Board SetupBoard()
+        public Board SetupBoard(BoardSize boardSize, FleetType fleetType)
         {
-            var fleet = fleetFactory.GetFleet();
-            var template = boardFactory.GetBoardTemplate();
+            var template = templateFactory.GetBoardTemplate(boardSize);
+            var fleet = fleetFactory.GetFleet(fleetType);
 
             if (fleet.Any(layout => !CanPlaceShip(template, layout)))
                 throw new CannotPlaceShipException();
@@ -24,9 +26,11 @@ namespace Battleships.Services.BoardSetup
 
         private bool CanPlaceShip(BoardTemplate template, ShipLayout layout)
         {
-            var freeSpaces = template.Locations.Except(_ships.Locations());
+            var freeSpaces = template.Locations
+                .Except(_ships.Locations())
+                .OrderBy(_ => Guid.NewGuid());
 
-            foreach (var point in freeSpaces.OrderBy(_ => Guid.NewGuid()))
+            foreach (var point in freeSpaces)
             foreach (var orientation in RandomOrientations)
             {
                 var ship = new Ship(layout, point, orientation);
