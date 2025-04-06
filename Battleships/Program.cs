@@ -31,6 +31,7 @@ namespace Battleships
             services
                 .AddSingleton<IConfigManager, AppSettingsConfigManager>()
                 .AddSingleton<IConfigService, ConfigService>()
+                .AddSingleton<IConsoleWrapper, ConsoleWrapper>()
                 .AddSingleton<IBoardSetupFactory, BoardSetupFactory>()
                 .AddSingleton<IBoardTemplateFactory, BoardTemplateFactory>()
                 .AddSingleton<IFleetFactory, FleetFactory>();

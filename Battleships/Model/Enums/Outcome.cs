@@ -2,9 +2,9 @@
 
 namespace Battleships.Model.Enums
 {
-    public enum MoveOutcome
+    public enum Outcome
     {
-        None,
+        None = 0,
         Hit,
 
         [Description("Unrecognised input")]

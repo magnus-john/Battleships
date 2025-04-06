@@ -7,7 +7,7 @@ using Battleships.UI.Interfaces;
 
 namespace Battleships.UI
 {
-    public class ConsoleInterface(IBoardDisplayService displayService) : IGameInterface
+    public class ConsoleInterface(IBoardDisplayService displayService, IConsoleWrapper console) : IGameInterface
     {
         private const string Empty = " . ";
         private const string Hit = " X ";
@@ -16,7 +16,7 @@ namespace Battleships.UI
 
         public void Display(Board board, bool allowCheating = false)
         {
-            Console.Clear();
+            console.Clear();
 
             var data = displayService.GetData(board);
 
@@ -29,33 +29,33 @@ namespace Battleships.UI
                 for (var x = 0; x < data.GetLength(0); x++)
                     line.Append(Output(data[x, y], allowCheating));
 
-                Console.WriteLine(line);
+                console.WriteLine(line);
             }
 
             var bottomRow = string.Join(" ", Enumerable.Range(1, board.Width).Select(x => $"{x}{(x < 10 ? " " : "")}"));
 
-            Console.WriteLine($"  {bottomRow}");
+            console.WriteLine($"  {bottomRow}");
         }
 
-        public void Display(MoveResult outcome)
+        public void Display(ActionResult outcome)
         {
-            Console.WriteLine();
+            console.WriteLine();
 
-            if (outcome.Outcome != MoveOutcome.None)
-                Console.WriteLine(outcome.Outcome.GetEnumDescription());
+            if (outcome.Outcome != Outcome.None)
+                console.WriteLine(outcome.Outcome.GetEnumDescription());
 
-            if (outcome.Outcome == MoveOutcome.Sink)
-                Console.WriteLine($"You sunk a {outcome.Sunk}!");
+            if (outcome.Outcome == Outcome.Sink)
+                console.WriteLine($"You sunk a {outcome.Sunk}!");
         }
 
-        public void DisplayWinMessage() => Console.WriteLine("You win!");
+        public void DisplayWinMessage() => console.WriteLine("You win!");
 
         public Move GetUserInput()
         {
-            Console.WriteLine();
-            Console.WriteLine("Your move:");
+            console.WriteLine();
+            console.WriteLine("Your move:");
 
-            var input = Console.ReadLine();
+            var input = console.ReadLine();
 
             return new Move(input);
         }

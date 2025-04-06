@@ -30,13 +30,15 @@ namespace Battleships.Services.BoardSetup
                 .Except(_ships.Locations())
                 .OrderBy(_ => Guid.NewGuid());
 
+            var shipLocations = _ships.Locations().ToHashSet();
+
             foreach (var point in freeSpaces)
             foreach (var orientation in RandomOrientations)
             {
                 var ship = new Ship(layout, point, orientation);
 
                 if (!template.Fits(ship)
-                    || ship.CoOrdinates.Any(_ships.Locations().Contains)) 
+                    || ship.CoOrdinates.Any(shipLocations.Contains)) 
                     continue;
 
                 _ships.Add(ship);

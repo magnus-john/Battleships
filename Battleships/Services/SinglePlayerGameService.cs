@@ -17,7 +17,7 @@ namespace Battleships.Services
         {
             var setupService = setupFactory.GetSetupService(config.SetupType);
             var board = setupService.SetupBoard(config.BoardSize, config.FleetType);
-            var response = new Response(board);
+            var response = turnService.Initialise(board);
 
             while (true)
             {

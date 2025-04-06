@@ -25,6 +25,20 @@ namespace Battleships.Tests.Services
         }
 
         [Fact]
+        public void Initialise_ReturnsExpectedResult()
+        {
+            var board = Boards.TinyWithTopLeftTug;
+
+            var result = _sut.Initialise(board);
+
+            VerifyAsserts();
+
+            result.Board.Should().Be(board);
+            result.GameIsOver.Should().BeFalse();
+            result.Result.Should().BeEquivalentTo(new ActionResult(Outcome.None));
+        }
+
+        [Fact]
         public void GetMove_GetsMoveFromInterface()
         {
             var expected = Moves.A1;
@@ -45,7 +59,7 @@ namespace Battleships.Tests.Services
         {
             var board = Boards.TinyWithTopLeftTug;
             var move = Moves.A1;
-            var expected = new Response(Boards.MediumWithTopLeftTug, MoveOutcome.Hit);
+            var expected = new Response(Boards.MediumWithTopLeftTug, Outcome.Hit);
 
             _moveService
                 .Setup(x => x.MakeMove(board, move))

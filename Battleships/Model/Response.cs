@@ -2,19 +2,19 @@
 
 namespace Battleships.Model
 {
-    public class Response(Board board, MoveResult result)
+    public class Response(Board board, ActionResult result)
     {
-        public Response(Board board) : this(board, new MoveResult(MoveOutcome.None))
+        public Response(Board board) : this(board, new ActionResult(Outcome.None))
         {
         }
 
-        public Response(Board board, MoveOutcome outcome) : this(board, new MoveResult(outcome))
+        public Response(Board board, Outcome outcome) : this(board, new ActionResult(outcome))
         {
         }
 
         public Board Board { get; } = board;
 
-        public MoveResult Result { get; } = result;
+        public ActionResult Result { get; } = result;
 
         public bool GameIsOver => Board.AllShipsAreSunk;
     }

@@ -2,9 +2,9 @@
 
 namespace Battleships.Model
 {
-    public class MoveResult(MoveOutcome outcome, string? sunk = null)
+    public class ActionResult(Outcome outcome, string? sunk = null)
     {
-        public MoveOutcome Outcome => outcome;
+        public Outcome Outcome => outcome;
 
         public string? Sunk => sunk;
     }

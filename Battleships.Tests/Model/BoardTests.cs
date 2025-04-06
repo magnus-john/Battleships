@@ -211,37 +211,37 @@ namespace Battleships.Tests.Model
         }
 
         [Fact]
-        public void Attack_TargetIsOutOfBounds_ReturnsOutOfBounds()
+        public void FireUpon_TargetIsOutOfBounds_ReturnsOutOfBounds()
         {
             var result = _sut.FireUpon(Points.OutOfBounds);
 
-            result.Should().BeEquivalentTo(new MoveResult(MoveOutcome.OutOfBounds));
+            result.Should().BeEquivalentTo(new ActionResult(Outcome.OutOfBounds));
         }
 
         [Fact]
-        public void Attack_TargetMisses_ReturnsMiss()
+        public void FireUpon_TargetMisses_ReturnsMiss()
         {
             var result = _sut.FireUpon(_sut.FreeSpaces().First());
 
-            result.Should().BeEquivalentTo(new MoveResult(MoveOutcome.Miss));
+            result.Should().BeEquivalentTo(new ActionResult(Outcome.Miss));
         }
 
         [Fact]
-        public void Attack_TargetHits_AndDoesNotSinkShip_ReturnsHit()
+        public void FireUpon_TargetHits_AndDoesNotSinkShip_ReturnsHit()
         {
             _sut = Boards.MediumWithTopLeftDestroyer;
-            var result = _sut.FireUpon(_sut.ShipLocations.First());
+            var result = _sut.FireUpon(Points.TopLeft);
 
-            result.Should().BeEquivalentTo(new MoveResult(MoveOutcome.Hit));
+            result.Should().BeEquivalentTo(new ActionResult(Outcome.Hit));
         }
 
         [Fact]
-        public void Attack_TargetHits_AndSinksShip_ReturnsSink()
+        public void FireUpon_TargetHits_AndSinksShip_ReturnsSink()
         {
             _sut = Boards.MediumWithTopLeftTug;
-            var result = _sut.FireUpon(_sut.ShipLocations.First());
+            var result = _sut.FireUpon(Points.TopLeft);
 
-            result.Should().BeEquivalentTo(new MoveResult(MoveOutcome.Sink, nameof(Tug)));
+            result.Should().BeEquivalentTo(new ActionResult(Outcome.Sink, nameof(Tug)));
         }
 
         private static List<Ship> TwoShips => 

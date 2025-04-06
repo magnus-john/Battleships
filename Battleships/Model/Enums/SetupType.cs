@@ -2,7 +2,7 @@
 {
     public enum SetupType
     {
-        Random,
+        Random = 0,
         TopLeft
     }
 }

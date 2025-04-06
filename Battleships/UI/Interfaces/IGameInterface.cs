@@ -5,7 +5,7 @@ namespace Battleships.UI.Interfaces
     public interface IGameInterface
     {
         void Display(Board board, bool allowCheating);
-        void Display(MoveResult outcome);
+        void Display(ActionResult outcome);
         void DisplayWinMessage();
 
         Move GetUserInput();

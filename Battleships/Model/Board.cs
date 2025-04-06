@@ -31,24 +31,24 @@ namespace Battleships.Model
         public IEnumerable<Point> ShipLocations => _fleet.Locations();
         public IEnumerable<Point> UndiscoveredShipLocations => ShipLocations.Except(Hits);
 
-        public MoveResult FireUpon(Point target)
+        public ActionResult FireUpon(Point target)
         {
             if (_template.IsOutOfBounds(target))
-                return new MoveResult(MoveOutcome.OutOfBounds);
+                return new ActionResult(Outcome.OutOfBounds);
 
             var ship = ShipAt(target);
 
             if (ship == null)
             {
                 _misses.Add(target);
-                return new MoveResult(MoveOutcome.Miss);
+                return new ActionResult(Outcome.Miss);
             }
 
             var outcome = ship.RecordHit(target);
 
             return outcome == HitType.Fatal
-                ? new MoveResult(MoveOutcome.Sink, ship.Name)
-                : new MoveResult(MoveOutcome.Hit);
+                ? new ActionResult(Outcome.Sink, ship.Name)
+                : new ActionResult(Outcome.Hit);
         }
 
         private bool CanBeAdded(Ship ship)

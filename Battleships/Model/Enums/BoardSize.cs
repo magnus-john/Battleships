@@ -2,7 +2,7 @@
 {
     public enum BoardSize
     {
-        Large,
+        Large = 0,
         Medium,
         Small
     }

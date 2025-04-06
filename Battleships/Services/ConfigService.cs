@@ -5,10 +5,10 @@ namespace Battleships.Services
 {
     public class ConfigService(IConfigManager config) : IConfigService
     {
-        private const string BoardSizeName = "BoardSize";
-        private const string FleetTypeName = "FleetType";
-        private const string SetupTypeName = "SetupType";
-        private const string AllowCheatingName = "AllowCheating";
+        public const string BoardSizeName = "BoardSize";
+        public const string FleetTypeName = "FleetType";
+        public const string SetupTypeName = "SetupType";
+        public const string AllowCheatingName = "AllowCheating";
 
         public BoardSize BoardSize => GetEnumConfigValue<BoardSize>(BoardSizeName);
         public FleetType FleetType => GetEnumConfigValue<FleetType>(FleetTypeName);

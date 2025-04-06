@@ -1,5 +1,4 @@
-﻿using Battleships.Extensions;
-using Battleships.Model;
+﻿using Battleships.Model;
 using Battleships.Model.Enums;
 using Battleships.Services.BoardSetup.Interfaces;
 using Battleships.Services.Exceptions;
@@ -19,8 +18,7 @@ namespace Battleships.Services.BoardSetup
             {
                 var ship = new Ship(layout, new Point(0, y), Orientation.Horizontal);
 
-                if (!boardTemplate.Fits(ship)
-                    || ship.CoOrdinates.Any(ships.Locations().Contains))
+                if (!boardTemplate.Fits(ship))
                     throw new CannotPlaceShipException();
 
                 ships.Add(ship);

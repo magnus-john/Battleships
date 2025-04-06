@@ -2,7 +2,7 @@
 {
     public enum HitType
     {
-        Fatal,
+        Fatal = 0,
         Miss,
         NonFatal,
         Repeat

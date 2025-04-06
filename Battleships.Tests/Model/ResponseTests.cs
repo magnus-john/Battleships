@@ -17,13 +17,13 @@ namespace Battleships.Tests.Model
             var result = new Response(board);
 
             result.Board.Should().Be(board);
-            result.Result.Outcome.Should().Be(MoveOutcome.None);
+            result.Result.Outcome.Should().Be(Outcome.None);
             result.Result.Sunk.Should().BeNull();
         }
 
         [Theory]
         [ClassData(typeof(OutcomeData))]
-        public void Initialise_WithBoardAndOutcome_PropertiesAreSetCorrectly(MoveOutcome outcome)
+        public void Initialise_WithBoardAndOutcome_PropertiesAreSetCorrectly(Outcome outcome)
         {
             var board = Boards.TinyWithTopLeftTug;
             var result = new Response(board, outcome);
@@ -35,10 +35,10 @@ namespace Battleships.Tests.Model
 
         [Theory]
         [ClassData(typeof(OutcomeData))]
-        public void Initialise_WithBoardAndResult_PropertiesAreSetCorrectly(MoveOutcome outcome)
+        public void Initialise_WithBoardAndResult_PropertiesAreSetCorrectly(Outcome outcome)
         {
             var board = Boards.TinyWithTopLeftTug;
-            var result = new Response(board, new MoveResult(outcome, Test));
+            var result = new Response(board, new ActionResult(outcome, Test));
 
             result.Board.Should().Be(board);
             result.Result.Outcome.Should().Be(outcome);
@@ -64,11 +64,11 @@ namespace Battleships.Tests.Model
         }
     }
 
-    public class OutcomeData : TheoryData<MoveOutcome>
+    public class OutcomeData : TheoryData<Outcome>
     {
         public OutcomeData()
         {
-            foreach (var outcome in Enum.GetValues<MoveOutcome>())
+            foreach (var outcome in Enum.GetValues<Outcome>())
             {
                 Add(outcome);
             }

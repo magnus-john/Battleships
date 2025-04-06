@@ -9,7 +9,7 @@ namespace Battleships.Services
         public Response MakeMove(Board board, Move move)
         {
             if (move.Location == null)
-                return new Response(board, MoveOutcome.Invalid);
+                return new Response(board, Outcome.Invalid);
 
             var result = board.FireUpon(move.Location.Value);
 

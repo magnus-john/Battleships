@@ -2,7 +2,7 @@
 {
     public enum FleetType
     {
-        Armada,
+        Armada = 0,
         Flotilla,
         Squadron
     }
