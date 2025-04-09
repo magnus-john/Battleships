@@ -36,7 +36,7 @@ namespace Battleships.Model
             if (_template.IsOutOfBounds(target))
                 return new ActionResult(Outcome.OutOfBounds);
 
-            var ship = ShipAt(target);
+            var ship = _fleet.FirstOrDefault(x => x.CoOrdinates.Contains(target));
 
             if (ship == null)
             {
@@ -65,7 +65,5 @@ namespace Battleships.Model
 
             return true;
         }
-
-        private Ship? ShipAt(Point p) => _fleet.FirstOrDefault(x => x.CoOrdinates.Contains(p));
     }
 }

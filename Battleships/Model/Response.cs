@@ -12,9 +12,9 @@ namespace Battleships.Model
         {
         }
 
-        public Board Board { get; } = board;
+        public Board Board => board;
 
-        public ActionResult Result { get; } = result;
+        public ActionResult Result => result;
 
         public bool GameIsOver => Board.AllShipsAreSunk;
     }

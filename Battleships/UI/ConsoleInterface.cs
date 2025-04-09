@@ -37,15 +37,15 @@ namespace Battleships.UI
             console.WriteLine($"  {bottomRow}");
         }
 
-        public void Display(ActionResult outcome)
+        public void Display(ActionResult result)
         {
             console.WriteLine();
 
-            if (outcome.Outcome != Outcome.None)
-                console.WriteLine(outcome.Outcome.GetEnumDescription());
+            if (result.Outcome != Outcome.None)
+                console.WriteLine(result.Outcome.GetEnumDescription());
 
-            if (outcome.Outcome == Outcome.Sink)
-                console.WriteLine($"You sunk a {outcome.Sunk}!");
+            if (result.Outcome == Outcome.Sink)
+                console.WriteLine($"You sunk a {result.Sunk}!");
         }
 
         public void DisplayWinMessage() => console.WriteLine("You win!");

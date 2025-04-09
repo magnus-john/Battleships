@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35913.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleships", ".\Battleships\Battleships.csproj", "{04D3F8C1-CCE8-415E-AEB5-A12E88C29CE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleships", "Battleships\Battleships.csproj", "{04D3F8C1-CCE8-415E-AEB5-A12E88C29CE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleships.Tests", ".\Battleships.Tests\Battleships.Tests.csproj", "{B7B425F7-DFBC-41C5-8D3E-748C118BC405}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Battleships.Tests", "Battleships.Tests\Battleships.Tests.csproj", "{B7B425F7-DFBC-41C5-8D3E-748C118BC405}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

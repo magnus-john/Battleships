@@ -4,8 +4,9 @@ namespace Battleships.Model
 {
     public class Move(string? input)
     {
-        public const string Exit = "EXIT";
         private const string ValidInput = "^[A-Z][0-9]+$";
+        private static readonly Regex ValidInputPattern = new(ValidInput);
+        public const string Exit = "EXIT";
 
         public Point? Location { get; } = Parse(input);
 
@@ -18,7 +19,7 @@ namespace Battleships.Model
 
             var capitalised = input.ToUpper();
 
-            if (!new Regex(ValidInput).IsMatch(capitalised))
+            if (!ValidInputPattern.IsMatch(capitalised))
                 return null;
 
             if (!int.TryParse(input[1..], out var value))
