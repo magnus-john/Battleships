@@ -3,6 +3,8 @@ using Battleships.Model.Enums;
 using Battleships.Tests.Helpers;
 using FluentAssertions;
 using Xunit;
+#pragma warning disable xUnit1045
+#pragma warning disable xUnit1044
 
 namespace Battleships.Tests.Model
 {

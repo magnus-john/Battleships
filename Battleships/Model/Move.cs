@@ -1,16 +1,14 @@
-﻿using System.Text.RegularExpressions;
+﻿using Battleships.Model.RegEx;
 
 namespace Battleships.Model
 {
     public class Move(string? input)
     {
-        private const string ValidInput = "^[A-Z][0-9]+$";
-        private static readonly Regex ValidInputPattern = new(ValidInput);
         public const string Exit = "EXIT";
 
-        public Point? Location { get; } = Parse(input);
+        public Point? Location => Parse(input);
 
-        public bool IsExit { get; } = input?.ToUpper() == Exit;
+        public bool IsExit => input?.ToUpper() == Exit;
 
         private static Point? Parse(string? input)
         {
@@ -19,7 +17,7 @@ namespace Battleships.Model
 
             var capitalised = input.ToUpper();
 
-            if (!ValidInputPattern.IsMatch(capitalised))
+            if (!MoveInput.Pattern().IsMatch(capitalised))
                 return null;
 
             if (!int.TryParse(input[1..], out var value))

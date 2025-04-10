@@ -1,4 +1,5 @@
-﻿using Battleships.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+using Battleships.Services;
 using Battleships.Services.Factories;
 using Battleships.Services.Factories.Interfaces;
 using Battleships.Services.Interfaces;
@@ -8,7 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Battleships
 {
-    internal class Program
+    [ExcludeFromCodeCoverage]
+    internal static class Program
     {
         private static void Main(string[] _)
         {
@@ -21,7 +23,7 @@ namespace Battleships
                 .GetService<IGameService>();
 
             if (game == null)
-                throw new ApplicationException("Unable to start game");
+                throw new EntryPointNotFoundException("Unable to start game");
 
             game.Play();
         }

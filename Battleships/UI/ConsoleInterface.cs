@@ -14,7 +14,7 @@ namespace Battleships.UI
         private const string Miss = " O ";
         private const string Undiscovered = " @ ";
 
-        public void Display(Board board, bool allowCheating = false)
+        public void Display(Board board, bool allowCheating)
         {
             console.Clear();
 

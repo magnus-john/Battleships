@@ -33,17 +33,17 @@ namespace Battleships.Services.BoardSetup
             var shipLocations = _ships.Locations().ToHashSet();
 
             foreach (var point in freeSpaces)
-            foreach (var orientation in RandomOrientations)
-            {
-                var ship = new Ship(layout, point, orientation);
+                foreach (var orientation in RandomOrientations)
+                {
+                    var ship = new Ship(layout, point, orientation);
 
-                if (!template.Fits(ship)
-                    || ship.CoOrdinates.Any(shipLocations.Contains)) 
-                    continue;
+                    if (!template.Fits(ship)
+                        || ship.CoOrdinates.Any(shipLocations.Contains))
+                        continue;
 
-                _ships.Add(ship);
-                return true;
-            }
+                    _ships.Add(ship);
+                    return true;
+                }
 
             return false;
         }

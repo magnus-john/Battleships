@@ -1,0 +1,1 @@
+F:\Source\c#\Battleships\.sonarqube\out\0
